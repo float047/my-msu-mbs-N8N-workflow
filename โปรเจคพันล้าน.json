@@ -1,0 +1,264 @@
+{
+  "name": "PosProject",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "โครงสร้างเวิร์กโฟลว์ (Workflow Structure)\n1.Trigger Node (ตัวรับภาพ): รับภาพข้อมูลยอดขาย\n\n2.OCR Node (แปลงรูปเป็นตัวหนังสือ): แปลงภาพให้เป็นข้อความ (Optical Character Recognition - OCR)\n\n3.Data Processing Node (จัดการข้อมูล): ดึงเฉพาะข้อมูลยอดขายที่ต้องการจากข้อความที่แปลงได้\n\n4.Spreadsheet Node (อัพเดทไฟล์ตาราง): อัพเดทข้อมูลยอดขายเข้าไปในไฟล์ตาราง (เช่น Google Sheets, Excel Online, Airtable)\n\n5.Email Node (ส่งชีทเข้าเมล): ส่งไฟล์ตารางฉบับล่าสุด (หรือลิงก์) ไปยังอีเมลเจ้าของร้าน",
+        "height": 288,
+        "width": 576
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        368,
+        -416
+      ],
+      "id": "9f510a9d-140a-4471-82fa-4902033eb21d",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "6hoCP1rwTxqdcCVx",
+          "mode": "list",
+          "cachedResultName": "ยอดขาย",
+          "cachedResultUrl": "/projects/S78EV06h0DnjbZCA/datatables/6hoCP1rwTxqdcCVx"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -176
+      ],
+      "id": "6a86fcbf-17ea-4b98-a4b8-54cb1407a970",
+      "name": "Insert row"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        -320
+      ],
+      "id": "8a3ac71e-86fd-4721-9708-eb6b38b468bb",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "sendTo": "66010915590@msu.ac.th",
+        "subject": "=รายงานยอดขาย  {{ $json}}",
+        "message": "รายงานยอดขายประจำวัน",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        192,
+        -176
+      ],
+      "id": "cf65e4f9-1c2c-4268-b774-359d21c56e07",
+      "name": "Send a message",
+      "webhookId": "7ff610b6-677a-4631-a2c9-34c76e278386",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "52WjH1hvdSMOaDHW",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -816,
+        -112
+      ],
+      "id": "61b5bbbd-4601-498d-ab45-b9bcfa24f89d",
+      "name": "Telegram Trigger",
+      "webhookId": "6ac707a1-8336-4033-8645-18212db8bceb",
+      "credentials": {
+        "telegramApi": {
+          "id": "x35zbuKGgh7PDiNA",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -544,
+        -288
+      ],
+      "id": "eb4a1007-5527-47e1-be3f-9c2c0988ed3f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -32,
+        -176
+      ],
+      "id": "3f698676-e16f-4c51-b18b-bcca7db37747",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -624,
+        -32
+      ],
+      "id": "4052b213-9efd-4492-8dbc-9e3a5969944c",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "F1TTZl4owD6mgoFH",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -464,
+        -32
+      ],
+      "id": "9b12fb36-c8ce-47ed-b0af-3f6c7fa2dfbe",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        []
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "798e2e14-ef46-4e2b-a83e-05a7f15984c5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6329af5e47d839411d4c7f27150ccfe905d839a301878201dfa1d4cbf4c683fd"
+  },
+  "id": "bVyfgPg86eFqQBXP",
+  "tags": []
+}
