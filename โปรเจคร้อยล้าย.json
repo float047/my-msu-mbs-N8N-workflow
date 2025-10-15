@@ -1,0 +1,337 @@
+{
+  "name": "SushiPeak–Daily Sales AutoReport_JSONtemplate",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "channel_post",
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "249c8a68-839c-4337-a83b-db1723cf0b02",
+      "name": "Telegram Trigger",
+      "webhookId": "45575b94-535b-4d41-9edf-b2acfec6a97d",
+      "alwaysOutputData": false,
+      "notesInFlow": false,
+      "credentials": {
+        "telegramApi": {
+          "id": "DiR7EzxcPQVPLLDJ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.photo[2].file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "85e59467-a600-47cc-821a-90dd14a144aa",
+      "name": "Get a file",
+      "webhookId": "7093cd85-1479-486a-a9ee-b90ed994ac42",
+      "credentials": {
+        "telegramApi": {
+          "id": "DiR7EzxcPQVPLLDJ",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.ocr.space/parse/image",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "APIKey",
+              "value": "K86127959088957"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        256,
+        -256
+      ],
+      "id": "414b5f0b-3e99-40c6-a3ba-cd9727c87694",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "uvzJxNx6V4dCM7HE",
+          "mode": "list",
+          "cachedResultName": "สรุปยอดขาย",
+          "cachedResultUrl": "/projects/R76xdBrzukrYXks2/datatables/uvzJxNx6V4dCM7HE"
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1232,
+        -192
+      ],
+      "id": "f25cac52-d64c-4278-9179-e3ad3a3e2847",
+      "name": "Get row(s)1"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "nP4pLrKsrcGI9JIM",
+          "mode": "list",
+          "cachedResultName": "สรุปยอดขาย2",
+          "cachedResultUrl": "/projects/R76xdBrzukrYXks2/datatables/nP4pLrKsrcGI9JIM"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "StartingCash": "={{ $json.salesSummary.startingCash }}",
+            "Cashsale": "={{ $json.salesSummary.cashSales }}",
+            "Refunds": "={{ $json.salesSummary.refunds }}",
+            "CashInOut": "={{ $json.salesSummary.cashInOut }}",
+            "ExpectedCashtotal": "={{ $json.salesSummary.expectedTotal }}",
+            "ActualCash": "={{ $json.salesSummary.actualCash }}",
+            "Discrepancy": "={{ $json.salesSummary.discrepancy }}",
+            "TotalBills": "={{ $json.salesSummary.totalBills }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "StartingCash",
+              "displayName": "StartingCash",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Cashsale",
+              "displayName": "Cashsale",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Refunds",
+              "displayName": "Refunds",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "CashInOut",
+              "displayName": "CashInOut",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ExpectedCashtotal",
+              "displayName": "ExpectedCashtotal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ActualCash",
+              "displayName": "ActualCash",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Discrepancy",
+              "displayName": "Discrepancy",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "TotalBills",
+              "displayName": "TotalBills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        -176
+      ],
+      "id": "4453480c-9d99-4411-81d1-074a25a08422",
+      "name": "Insert row"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n// ดึงข้อความจากผล OCR และแยกบรรทัด\nfor (const item of $input.all()) {\n  const result = item.json.ParsedResults?.[0]?.ParsedText || \"\";\n  \n  // แปลงเป็น array ของบรรทัด\n  const lines = result.split('\\n').map(line => line.trim()).filter(Boolean);\n  \n  // สร้าง object สำหรับเก็บผล\n  const summary = {\n    startingCash: Number,\n    cashSales: Number,\n    refunds: Number,\n    cashInOut: Number,\n    expectedTotal: Number,\n    actualCash: Number,\n    discrepancy: Number,\n    totalBills: Number\n  };\n  \n  // อ่านค่าจากข้อความ OCR ทีละบรรทัด\n  for (const line of lines) {\n    if (line.startsWith(\"Starting Cash\")) summary.startingCash = parseFloat(line.split(/\\s+/).pop());\n    if (line.startsWith(\"Cash Sales\")) summary.cashSales = parseFloat(line.split(/\\s+/).pop());\n    if (line.startsWith(\"Refunds\")) summary.refunds = parseFloat(line.split(/\\s+/).pop());\n    if (line.startsWith(\"Cash In/Out\")) summary.cashInOut = parseFloat(line.split(/\\s+/).pop());\n    if (line.startsWith(\"Expected Cash Total\")) summary.expectedTotal = parseFloat(line.split(/\\s+/).pop());\n    if (line.startsWith(\"Actual Cash in Drawer\")) summary.actualCash = parseFloat(line.split(/\\s+/).pop());\n    if (line.startsWith(\"Discrepancy\")) summary.discrepancy = parseFloat(line.split(/\\s+/).pop());\n    if (line.startsWith(\"Total Bills\")) summary.totalBills = parseInt(line.split(/\\s+/).pop());\n  }\n\n  item.json.salesSummary = summary;\n}\n\nreturn $input.all();\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        704,
+        -176
+      ],
+      "id": "cb8afa27-ee1a-4357-b5bc-714c4b85cab1",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "url": "https://ai.iapp.co.th/product/document_ocr",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "aiapp",
+              "value": "XGwPoOaDsaTIj3UybhHfsVRxmSGfjeGP"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        400,
+        0
+      ],
+      "id": "17e548ed-6aea-460e-a88f-475a5de9efdb",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();const axios = require(\"axios\")\nconst FormData = require(\"form-data\")\nconst fs = require(\"fs\")\nlet data = new FormData()\ndata.append(\"file\", fs.createReadStream(\"{YOUR UPLOADED FILE}\"))\n\nlet config = {\n    method: \"post\",\n    maxBodyLength: Infinity,\n    url: \"https://api.iapp.co.th/document-ocr/ocr\",\n    headers: {\n        apikey: \"{YOUR API KEY}\",\n        ...data.getHeaders(),\n    },\n    data: data,\n}\n\naxios\n    .request(config)\n    .then((response) => {\n        console.log(JSON.stringify(response.data))\n    })\n    .catch((error) => {\n        console.log(error)\n    })\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "427db16c-79d8-4686-97c7-b0a14ec09dbb",
+      "name": "Code in JavaScript1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        []
+      ]
+    },
+    "Insert row": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        []
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e12d5fe2-80c6-4887-aa7c-c4bef0965845",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "33f21311ba07ce8122d38e3c71fef4d2b8efc5ee279d0cc9272a66162f1369bc"
+  },
+  "id": "yZpHjZa3fiAHlOgq",
+  "tags": []
+}
