@@ -1,0 +1,312 @@
+{
+  "name": "SushiPeak–Daily Sales AutoReport_JSONtemplate",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "channel_post",
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        48,
+        -128
+      ],
+      "id": "568a6eff-e078-4ce7-bfe7-18793d3f9ff8",
+      "name": "Telegram Trigger",
+      "webhookId": "45575b94-535b-4d41-9edf-b2acfec6a97d",
+      "alwaysOutputData": false,
+      "notesInFlow": false,
+      "credentials": {
+        "telegramApi": {
+          "id": "826sLywLMKwYAs0N",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.photo[2].file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        256,
+        -128
+      ],
+      "id": "5ef5fa7f-4a98-4e1b-a359-ef8043c17c35",
+      "name": "Get a file",
+      "webhookId": "7093cd85-1479-486a-a9ee-b90ed994ac42",
+      "credentials": {
+        "telegramApi": {
+          "id": "826sLywLMKwYAs0N",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.ocr.space/parse/image",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "APIKey",
+              "value": "K86127959088957"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        464,
+        -128
+      ],
+      "id": "f0560dda-3997-4a95-a682-3c3236da2b1d",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "qtTR5DDAH7xwTOWa",
+          "mode": "list",
+          "cachedResultName": "สรุปยอดขาย",
+          "cachedResultUrl": "/projects/bjHiJgA47vUjqAyx/datatables/qtTR5DDAH7xwTOWa"
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        1104,
+        -128
+      ],
+      "id": "fd45ab3e-67c3-40e5-afd8-10d3e75fa8b4",
+      "name": "Get row(s)1"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "qtTR5DDAH7xwTOWa",
+          "mode": "list",
+          "cachedResultName": "สรุปยอดขาย",
+          "cachedResultUrl": "/projects/bjHiJgA47vUjqAyx/datatables/qtTR5DDAH7xwTOWa"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "startingCash": "={{ $json.salesSummary.startingCash }}",
+            "CashSale": "={{ $json.salesSummary.cashSales }}",
+            "Refunds": "={{ $json.salesSummary.refunds }}",
+            "CashInOut": "={{ $json.salesSummary.cashInOut }}",
+            "ExpectedCashTotal": "={{ $json.salesSummary.expectedTotal }}",
+            "ActualCash": "={{ $json.salesSummary.actualCash }}",
+            "Discrepancy": "={{ $json.salesSummary.discrepancy }}",
+            "TotalBills": "={{ $json.salesSummary.totalBills }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "startingCash",
+              "displayName": "startingCash",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "CashSale",
+              "displayName": "CashSale",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Refunds",
+              "displayName": "Refunds",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "CashInOut",
+              "displayName": "CashInOut",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Ice",
+              "displayName": "Ice",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "ExpectedCashTotal",
+              "displayName": "ExpectedCashTotal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ActualCash",
+              "displayName": "ActualCash",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Discrepancy",
+              "displayName": "Discrepancy",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "TotalBills",
+              "displayName": "TotalBills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        896,
+        -128
+      ],
+      "id": "dc940701-77f8-40f6-b366-5d488e1eaa71",
+      "name": "Insert row"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n// ดึงข้อความจากผล OCR และแยกบรรทัด\nfor (const item of $input.all()) {\n  const result = item.json.ParsedResults?.[0]?.ParsedText || \"\";\n  \n  // แปลงเป็น array ของบรรทัด\n  const lines = result.split('\\n').map(line => line.trim()).filter(Boolean);\n  \n  // สร้าง object สำหรับเก็บผล\n  const summary = {\n    startingCash: 800,\n    cashSales: 1250,\n    refunds: 50,\n    cashInOut: null,\n    expectedTotal: null,\n    actualCash: null,\n    discrepancy: null,\n    totalBills: null\n  };\n  \n  // อ่านค่าจากข้อความ OCR ทีละบรรทัด\n  for (const line of lines) {\n    if (line.startsWith(\"Starting Cash\")) summary.startingCash = parseFloat(line.split(/\\s+/).pop());\n    if (line.startsWith(\"Cash Sales\")) summary.cashSales = parseFloat(line.split(/\\s+/).pop());\n    if (line.startsWith(\"Refunds\")) summary.refunds = parseFloat(line.split(/\\s+/).pop());\n    if (line.startsWith(\"Cash In/Out\")) summary.cashInOut = parseFloat(line.split(/\\s+/).pop());\n    if (line.startsWith(\"Expected Cash Total\")) summary.expectedTotal = parseFloat(line.split(/\\s+/).pop());\n    if (line.startsWith(\"Actual Cash in Drawer\")) summary.actualCash = parseFloat(line.split(/\\s+/).pop());\n    if (line.startsWith(\"Discrepancy\")) summary.discrepancy = parseFloat(line.split(/\\s+/).pop());\n    if (line.startsWith(\"Total Bills\")) summary.totalBills = parseInt(line.split(/\\s+/).pop());\n  }\n\n  item.json.salesSummary = summary;\n}\n\nreturn $input.all();\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        -128
+      ],
+      "id": "fa3fb757-0db2-4fe5-a486-326465ec0930",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "36045782-b55b-4c12-8e76-d9e854458cf4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "6329af5e47d839411d4c7f27150ccfe905d839a301878201dfa1d4cbf4c683fd"
+  },
+  "id": "OTVK02c0aEMufX21",
+  "tags": []
+}
